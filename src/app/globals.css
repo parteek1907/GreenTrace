@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Premium SaaS Colors */
+  --color-gt-primary: #146E45;
+  --color-gt-bright: #90B816;
+  --color-gt-secondary: #90B816;
+  --color-gt-medium: #547D48;
+  --color-gt-teal: #16A085;
+  --color-gt-yellow: #F4D03F;
+
+  --color-gt-dark: #212121;
+  --color-gt-gray: #6B7280;
+  --color-gt-bg: #F6F4ED;
+  --color-gt-surface: #FFFFFF;
+  --color-gt-border: #ECE8DA;
+
+  /* Status Colors */
+  --color-gt-error: #EF4444;
+  --color-gt-success: #10B981;
+  --color-gt-warning: #F59E0B;
+}
+
+@layer base {
+  :root {
+    --background: #F6F4ED;
+    --foreground: #212121;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Elegant scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D1D5DB;
+  }
+}
+
+@layer components {
+  /* Premium SaaS Card System */
+  .premium-card {
+    background-color: var(--color-gt-surface);
+    border: 1px solid var(--color-gt-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .premium-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    transform: translateY(-2px);
+    border-color: var(--color-gt-primary);
+  }
+
+  /* Replaces old glass system for components not yet migrated */
+  .glass {
+    background-color: var(--color-gt-surface);
+    border: 1px solid var(--color-gt-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .glass:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    transform: translateY(-2px);
+    border-color: var(--color-gt-primary);
+  }
+
+  .glass-strong {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--color-gt-border);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-gt-primary), var(--color-gt-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
