@@ -3,7 +3,7 @@
 import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
+
 import { Tabs } from "@ark-ui/react/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProfileProvider, useProfile } from "@/lib/contexts/ProfileContext";
@@ -23,9 +23,8 @@ import {
   FileText,
   LogOut,
   User,
-  CreditCard,
-  Palette,
-  LifeBuoy,
+
+
   Leaf,
   Flame,
   Droplet,
