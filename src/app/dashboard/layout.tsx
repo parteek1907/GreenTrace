@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Tabs } from "@ark-ui/react/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProfileProvider, useProfile } from "@/lib/contexts/ProfileContext";
+import { CarbonProvider } from "@/lib/contexts/CarbonContext";
 import { 
   LayoutDashboard, 
   PieChart, 
@@ -59,9 +60,11 @@ export default function DashboardLayout({
 }) {
   return (
     <ProfileProvider>
-      <Suspense fallback={<div className="h-screen w-screen bg-gt-bg" />}>
-        <DashboardInner>{children}</DashboardInner>
-      </Suspense>
+      <CarbonProvider>
+        <Suspense fallback={<div className="h-screen w-screen bg-gt-bg" />}>
+          <DashboardInner>{children}</DashboardInner>
+        </Suspense>
+      </CarbonProvider>
     </ProfileProvider>
   );
 }
