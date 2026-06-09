@@ -31,9 +31,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
         className={`${plusJakartaSans.variable} font-sans antialiased bg-gt-bg text-gt-dark min-h-screen flex flex-col selection:bg-gt-primary selection:text-white`}
+        suppressHydrationWarning
       >
         <div className="flex md:hidden w-full min-h-screen">
           <MobileExperience />

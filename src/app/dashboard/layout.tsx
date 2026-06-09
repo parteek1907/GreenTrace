@@ -77,9 +77,15 @@ function DashboardInner({
   const isNew = searchParams.get("new") === "true";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { profile } = useProfile();
-  const CurrentIcon = AVATAR_ICONS.find(a => a.id === profile.avatar)?.icon || Leaf;
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const CurrentIcon = mounted ? (AVATAR_ICONS.find(a => a.id === profile.avatar)?.icon || Leaf) : Leaf;
 
   const tips = [
     "Lowering your thermostat by 2°C saves up to 180kg CO₂ per year.",
@@ -90,7 +96,7 @@ function DashboardInner({
     "A reusable water bottle saves ~156 plastic bottles per year.",
     "Taking the train instead of flying saves 10x the carbon per km."
   ];
-  const dailyTip = tips[new Date().getDay()];
+  const dailyTip = mounted ? tips[new Date().getDay()] : tips[0];
 
   return (
     <div className="h-screen overflow-hidden flex bg-gt-bg text-gt-dark font-sans">
@@ -225,7 +231,7 @@ function DashboardInner({
                   <CurrentIcon className="w-4 h-4" strokeWidth={2.5} />
                 </div>
                 <div className="hidden sm:flex flex-col items-start">
-                  <span className="text-sm font-bold text-gt-dark leading-none group-hover:text-gt-primary transition-colors">{profile.firstName} {profile.lastName}</span>
+                  <span className="text-sm font-bold text-gt-dark leading-none group-hover:text-gt-primary transition-colors">{mounted ? `${profile.firstName} ${profile.lastName}` : "Loading..."}</span>
                 </div>
                 <Settings className="w-4 h-4 text-gt-gray group-hover:text-gt-primary transition-colors ml-2 hidden sm:block" />
               </button>
@@ -250,8 +256,8 @@ function DashboardInner({
                             <CurrentIcon className="w-5 h-5" strokeWidth={2.5} />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-gt-dark">{profile.firstName} {profile.lastName}</p>
-                            <p className="text-xs text-gt-gray mt-0.5">{profile.email}</p>
+                            <p className="text-sm font-bold text-gt-dark">{mounted ? `${profile.firstName} ${profile.lastName}` : "Loading..."}</p>
+                            <p className="text-xs text-gt-gray mt-0.5">{mounted ? profile.email : ""}</p>
                           </div>
                         </div>
                       </div>
