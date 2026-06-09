@@ -1,85 +1,93 @@
-export type Theme = {
+export interface Theme {
   id: string;
   name: string;
+  image: string;
+  overlay: string;
+  blur: string;
   gradient: string;
   textPrimary: string;
   textSecondary: string;
   accent: string;
   glass: string;
-};
+}
 
 export const THEMES: Theme[] = [
   {
-    id: "forest",
+    id: "deep-forest",
     name: "Deep Forest",
-    gradient: "from-[#0A1A12] via-[#112F20] to-[#0A1A12]",
-    textPrimary: "text-white",
-    textSecondary: "text-white/60",
-    accent: "text-[#4ADE80]",
-    glass: "bg-white/5 border-white/10"
+    image: "/deepforest.jpg",
+    overlay: "bg-[#02180B]/60",
+    blur: "backdrop-blur-md",
+    gradient: "from-[#022C16]/80 via-[#052E16]/60 to-[#042F2E]/80",
+    textPrimary: "text-[#ECFDF5]",
+    textSecondary: "text-[#6EE7B7]",
+    accent: "text-[#10B981]",
+    glass: "bg-[#064E3B]/40 border-[#34D399]/30 shadow-[0_0_50px_rgba(16,185,129,0.15)]"
   },
   {
     id: "aurora",
     name: "Aurora",
-    gradient: "from-[#0F172A] via-[#064E3B] to-[#1E3A8A]",
+    image: "/aurora.jpg",
+    overlay: "bg-[#020617]/50",
+    blur: "backdrop-blur-md",
+    gradient: "from-[#0F172A]/80 via-[#047857]/60 to-[#064E3B]/80",
     textPrimary: "text-white",
-    textSecondary: "text-blue-200",
-    accent: "text-emerald-400",
-    glass: "bg-white/10 border-white/20"
+    textSecondary: "text-[#A7F3D0]",
+    accent: "text-[#34D399]",
+    glass: "bg-[#022C16]/50 border-[#10B981]/40 shadow-[0_0_80px_rgba(52,211,153,0.2)]"
+  },
+  {
+    id: "emerald-glass",
+    name: "Emerald Glass",
+    image: "/emerald.jpg",
+    overlay: "bg-[#042F2E]/40",
+    blur: "backdrop-blur-md",
+    gradient: "from-[#065F46]/70 via-[#047857]/60 to-[#059669]/70",
+    textPrimary: "text-white",
+    textSecondary: "text-[#D1FAE5]",
+    accent: "text-[#A7F3D0]",
+    glass: "bg-white/10 border-white/20 shadow-[0_30px_60px_rgba(4,120,87,0.4)] backdrop-blur-xl"
+  },
+  {
+    id: "future-nature",
+    name: "Future Nature",
+    image: "/futurenature.jpg",
+    overlay: "bg-[#022C16]/50",
+    blur: "backdrop-blur-md",
+    gradient: "from-[#020617]/80 via-[#064E3B]/60 to-[#14532D]/80",
+    textPrimary: "text-[#F0FDF4]",
+    textSecondary: "text-[#86EFAC]",
+    accent: "text-[#4ADE80]",
+    glass: "bg-[#022C16]/60 border-[#22C55E]/20 shadow-[0_0_60px_rgba(34,197,94,0.15)]"
   },
   {
     id: "earth",
     name: "Earth",
-    gradient: "from-[#1C1917] via-[#292524] to-[#1C1917]",
-    textPrimary: "text-[#F5F5F4]",
-    textSecondary: "text-[#A8A29E]",
-    accent: "text-[#D97706]",
-    glass: "bg-white/5 border-white/10"
-  },
-  {
-    id: "minimal",
-    name: "Minimal",
-    gradient: "from-[#F8FAFC] via-[#F1F5F9] to-[#E2E8F0]",
-    textPrimary: "text-[#0F172A]",
-    textSecondary: "text-[#64748B]",
-    accent: "text-[#059669]",
-    glass: "bg-black/5 border-black/10 shadow-sm"
-  },
-  {
-    id: "executive",
-    name: "Executive",
-    gradient: "from-[#09090B] via-[#18181B] to-[#09090B]",
-    textPrimary: "text-[#FAFAFA]",
-    textSecondary: "text-[#A1A1AA]",
-    accent: "text-[#FFFFFF]",
-    glass: "bg-white/5 border-white/10"
-  },
-  {
-    id: "dark-carbon",
-    name: "Dark Carbon",
-    gradient: "from-[#000000] via-[#0A0A0A] to-[#000000]",
-    textPrimary: "text-[#FFFFFF]",
-    textSecondary: "text-[#737373]",
-    accent: "text-[#22C55E]",
-    glass: "bg-white/5 border-white/10"
+    image: "/earth.jpg",
+    overlay: "bg-[#1C1917]/60",
+    blur: "backdrop-blur-sm",
+    gradient: "from-[#292524]/80 via-[#451A03]/60 to-[#14532D]/80",
+    textPrimary: "text-[#FFFBF0]",
+    textSecondary: "text-[#FDE68A]",
+    accent: "text-[#F59E0B]",
+    glass: "bg-[#78350F]/30 border-[#D97706]/30 shadow-2xl"
   }
 ];
 
 export const QUOTES = [
-  "Small choices create lasting impact.",
-  "Progress matters more than perfection.",
-  "The future is built through daily decisions.",
-  "Every footprint tells a story.",
   "Measured impact. Meaningful change.",
-  "Less carbon. More future.",
-  "Better habits. Better planet.",
-  "Building a lighter footprint, one decision at a time."
+  "Building a lighter footprint every day.",
+  "Small choices. Lasting impact.",
+  "The future is shaped by today's decisions.",
+  "Leaving the world better than we found it.",
+  "Rewiring the future of sustainability.",
+  "My carbon signature, my legacy."
 ];
 
 export const TEMPLATES = [
   { id: "signature", name: "Carbon Signature" },
   { id: "snapshot", name: "Impact Snapshot" },
-  { id: "twin", name: "Carbon Twin Achievement" },
-  { id: "challenge", name: "Challenge Completion" },
-  { id: "review", name: "Year In Review" }
+  { id: "twin", name: "Carbon Twin Evolution" },
+  { id: "passport", name: "Sustainability Passport" },
+  { id: "review", name: "Year In Impact" }
 ];
