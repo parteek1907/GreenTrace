@@ -24,6 +24,7 @@ import {
   Utensils,
   Zap,
   ShoppingBag,
+  ArrowUp,
   type LucideIcon
 } from "lucide-react";
 
@@ -57,6 +58,7 @@ const iconMap: Record<string, LucideIcon> = {
   Utensils,
   Zap,
   ShoppingBag,
+  ArrowUp,
 };
 
 interface IconRendererProps {
