@@ -183,6 +183,16 @@ export default function OnboardingPage() {
   
   const handleNext = () => {
     if (isLast) {
+      // Persist onboarding data for the emissions engine
+      localStorage.setItem("gt_onboarding_data", JSON.stringify(formData));
+      // Persist profile data
+      localStorage.setItem("gt_user_profile", JSON.stringify({
+        firstName: formData.firstName || "Green",
+        lastName: formData.lastName || "Trace",
+        email: `${(formData.firstName as string || "green").toLowerCase()}.${(formData.lastName as string || "trace").toLowerCase()}@greentrace.app`,
+        country: formData.country || "United States",
+        avatar: "leaf",
+      }));
       setCompleted(true);
     } else {
       setDirection(1);
