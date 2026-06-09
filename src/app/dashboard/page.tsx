@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, ComposedChart, Bar, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { Target, Globe, TrendingDown, Medal, ArrowRight, Activity, Leaf, BatteryCharging, Orbit } from "lucide-react";
+import { Target, Globe, TrendingDown, Medal, ArrowRight, Activity, Leaf, BatteryCharging, Orbit, Sparkles } from "lucide-react";
 import { useCarbon } from "@/lib/contexts/CarbonContext";
 import { useProfile } from "@/lib/contexts/ProfileContext";
 import { getBreakdown } from "@/lib/carbon/calculator";
@@ -12,10 +13,21 @@ import { staggerContainer, fadeInUp } from "@/lib/utils/animations";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import IconRenderer from "@/components/ui/IconRenderer";
+import { CarbonSignatureStudio } from "@/components/dashboard/CarbonSignature/CarbonSignatureStudio";
 
 export default function DashboardPage() {
   const { score: carbonScore, monthlyData, recommendations, rank } = useCarbon();
-  const { profile } = useProfile();
+  const { profile, hasCreatedSignature } = useProfile();
+  const [isSignatureStudioOpen, setIsSignatureStudioOpen] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleCraftSignatureClick = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setIsSignatureStudioOpen(true);
+      setTimeout(() => setIsTransitioning(false), 500); // reset after open
+    }, 1200); // wait for premium animation to finish
+  };
   
   const breakdown = getBreakdown(carbonScore);
 
@@ -67,6 +79,20 @@ export default function DashboardPage() {
           {/* Subtle background glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gt-primary/5 rounded-full blur-3xl group-hover:bg-gt-primary/10 transition-colors duration-700 pointer-events-none" />
           
+          <AnimatePresence>
+            {isTransitioning && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1.5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="absolute inset-0 bg-gradient-to-t from-gt-primary/20 to-transparent mix-blend-overlay z-20 pointer-events-none"
+              >
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gt-primary/40 blur-[50px] rounded-full animate-pulse"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="text-center w-full mb-4 z-10">
             <h2 className="text-sm font-bold text-gt-gray uppercase tracking-widest mb-1">Overall Carbon Score</h2>
           </div>
@@ -91,7 +117,7 @@ export default function DashboardPage() {
                   animationEasing="ease-out"
                 >
                   {scoreData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                    <Cell key={`cell-${index}`} fill={isTransitioning && index === 0 ? "#22C55E" : entry.fill} className="transition-colors duration-1000" />
                   ))}
                 </Pie>
               </PieChart>
@@ -122,6 +148,37 @@ export default function DashboardPage() {
               <div className="text-xs font-bold text-gt-gray uppercase tracking-wider mb-1">Rank</div>
               <div className="text-lg font-bold text-gt-success">{rank.name}</div>
             </div>
+          </div>
+          
+          {/* Carbon Signature CTA */}
+          <div className="w-full mt-8 z-10">
+            <button
+              onClick={handleCraftSignatureClick}
+              disabled={isTransitioning}
+              className={`relative w-full group overflow-hidden rounded-[20px] p-4 text-left transition-all duration-500
+                bg-gradient-to-br from-white/60 to-white/20 backdrop-blur-md border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]
+                hover:shadow-[0_12px_40px_rgba(20,110,69,0.12)] hover:border-gt-primary/30 hover:-translate-y-1`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-gt-primary/0 via-gt-primary/5 to-gt-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
+              
+              <div className="flex items-center gap-4 relative z-10">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gt-primary/10 to-gt-teal/10 flex items-center justify-center shrink-0 border border-gt-primary/10 group-hover:scale-110 group-hover:bg-gt-primary group-hover:text-white transition-all duration-500 text-gt-primary">
+                  {isTransitioning ? (
+                    <Sparkles className="w-5 h-5 animate-spin-slow" />
+                  ) : (
+                    <Orbit className="w-5 h-5" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-gt-dark group-hover:text-gt-primary transition-colors duration-300">
+                    {hasCreatedSignature ? "View Carbon Signature" : "Craft Your Carbon Signature"}
+                  </h3>
+                  <p className="text-xs font-medium text-gt-gray mt-0.5">
+                    Turn your sustainability journey into a premium shareable identity.
+                  </p>
+                </div>
+              </div>
+            </button>
           </div>
         </motion.div>
 
@@ -356,6 +413,11 @@ export default function DashboardPage() {
         </motion.div>
 
       </div>
+
+      <CarbonSignatureStudio 
+        isOpen={isSignatureStudioOpen} 
+        onClose={() => setIsSignatureStudioOpen(false)} 
+      />
     </motion.div>
   );
 }

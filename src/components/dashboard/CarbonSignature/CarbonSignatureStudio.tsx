@@ -9,7 +9,7 @@ import { CardRenderer } from './CardTemplates';
 import { FocusRail } from '@/components/ui/focus-rail';
 
 export const CarbonSignatureStudio = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const { profile } = useProfile();
+  const { profile, setHasCreatedSignature } = useProfile();
   const { score: carbonScore, rank, monthlyData } = useCarbon();
   const cardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,6 +65,7 @@ export const CarbonSignatureStudio = ({ isOpen, onClose }: { isOpen: boolean; on
       link.href = dataUrl;
       link.click();
       
+      setHasCreatedSignature(true);
       setStep('EXPORTED');
       setTimeout(() => {
         setStep('EDITOR');

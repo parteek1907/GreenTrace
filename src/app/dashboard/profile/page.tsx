@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Mail, Calendar, MapPin, Award, Leaf, Flame, Droplet, Mountain, Trees, Sun, Zap, Bike, Check, Loader2, ChevronDown, Search, Share2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProfile } from "@/lib/contexts/ProfileContext";
-import { CarbonSignatureStudio } from "@/components/dashboard/CarbonSignature/CarbonSignatureStudio";
 
 const COUNTRIES = [
   "United States", "United Kingdom", "Canada", "Australia", "Germany", "France", "Japan",
@@ -189,23 +188,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Social Share Button */}
-          <button 
-            onClick={() => setIsShareModalOpen(true)}
-            className="w-full bg-gradient-to-r from-gt-dark to-[#0f2418] text-white rounded-[32px] p-6 shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_25px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all group overflow-hidden relative border border-[#1a3a2a]"
-          >
-            <div className="absolute inset-0 opacity-10 mix-blend-overlay"></div>
-            <div className="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-white/10 to-transparent transform skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
-            <div className="relative flex items-center justify-between">
-              <div className="text-left">
-                <p className="text-[10px] font-bold text-gt-bright uppercase tracking-widest mb-1">Spread the Word</p>
-                <p className="font-extrabold text-lg">Create Story Card</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md group-hover:bg-white/20 transition-colors">
-                <Share2 className="w-5 h-5 text-white" />
-              </div>
-            </div>
-          </button>
         </div>
 
         {/* Right Column: Forms & Details */}
@@ -336,12 +318,6 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-
-      {/* Advanced Carbon Signature Generator */}
-      <CarbonSignatureStudio 
-        isOpen={isShareModalOpen} 
-        onClose={() => setIsShareModalOpen(false)} 
-      />
     </>
   );
 }
