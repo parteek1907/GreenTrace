@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
-import Image from "next/image";
+import { Leaf } from "lucide-react";
 import IconRenderer from "@/components/ui/IconRenderer";
 
 export default function Footer() {
@@ -44,9 +43,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <Image src="/logo.png" alt="GreenTrace Logo" width={32} height={32} className="object-contain" />
-              <span className="text-xl font-extrabold tracking-tight text-gt-dark">
+            <Link href="/" className="flex items-center gap-2 mb-6 group">
+              <Leaf className="w-6 h-6 text-gt-primary transition-transform group-hover:scale-110" strokeWidth={2.5} />
+              <span className="text-xl font-extrabold tracking-tight text-gt-dark uppercase">
                 GreenTrace
               </span>
             </Link>
