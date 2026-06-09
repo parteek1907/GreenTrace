@@ -141,8 +141,8 @@ export default function PremiumOnboardingBackground({ stepId }: BackgroundProps)
       {/* Premium Depth Effects: Floating Blobs */}
       <motion.div
         animate={{
-          x: [0, 30, -20, 0] + mousePos.x,
-          y: [0, -40, 20, 0] + mousePos.y,
+          x: [mousePos.x, 30 + mousePos.x, -20 + mousePos.x, mousePos.x],
+          y: [mousePos.y, -40 + mousePos.y, 20 + mousePos.y, mousePos.y],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         className="absolute top-[10%] left-[20%] w-[600px] h-[600px] bg-gt-primary/5 rounded-full blur-[100px]"
@@ -150,8 +150,8 @@ export default function PremiumOnboardingBackground({ stepId }: BackgroundProps)
       
       <motion.div
         animate={{
-          x: [0, -40, 30, 0] + mousePos.x * -1,
-          y: [0, 30, -50, 0] + mousePos.y * -1,
+          x: [-mousePos.x, -40 - mousePos.x, 30 - mousePos.x, -mousePos.x],
+          y: [-mousePos.y, 30 - mousePos.y, -50 - mousePos.y, -mousePos.y],
         }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
         className="absolute bottom-[10%] right-[10%] w-[800px] h-[800px] bg-gt-teal/5 rounded-full blur-[120px]"
