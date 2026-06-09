@@ -1,7 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const faqs = [
   {
@@ -39,7 +45,6 @@ const faqs = [
 export default function FAQ() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section id="faq" className="relative py-32 px-6 bg-gt-bg">
@@ -59,60 +64,27 @@ export default function FAQ() {
         </motion.div>
 
         <motion.div
-          className="space-y-4"
+          className="w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          {faqs.map((faq, i) => (
-            <div
-              key={i}
-              className="bg-white border border-gt-border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md"
-            >
-              <button
-                onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer"
-                aria-expanded={openIndex === i}
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`item-${i}`}
+                className="bg-white border border-gt-border rounded-2xl px-6 shadow-sm data-[state=open]:shadow-md transition-all duration-300"
               >
-                <span className="font-bold text-gt-dark text-lg pr-4">
+                <AccordionTrigger className="text-left hover:no-underline font-bold text-gt-dark text-lg py-5">
                   {faq.question}
-                </span>
-                <motion.div
-                  className="w-8 h-8 rounded-full bg-gt-bg flex items-center justify-center flex-shrink-0 text-gt-primary"
-                  animate={{ rotate: openIndex === i ? 180 : 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </motion.div>
-              </button>
-              <AnimatePresence>
-                {openIndex === i && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <div className="px-6 pb-6 text-base md:text-lg text-gt-gray font-medium leading-relaxed">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                </AccordionTrigger>
+                <AccordionContent className="text-base md:text-lg text-gt-gray font-medium leading-relaxed pb-5">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </motion.div>
       </div>
     </section>
