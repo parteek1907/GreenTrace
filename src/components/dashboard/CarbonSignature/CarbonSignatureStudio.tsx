@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, ChevronRight, Wand2, Sparkles, LayoutTemplate, Palette, Check, Loader2, Leaf, Image as ImageIcon, MonitorSmartphone, Share2, Camera } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { useProfile } from '@/lib/contexts/ProfileContext';
+import { useCarbon } from '@/lib/contexts/CarbonContext';
 import { THEMES, QUOTES } from './config';
 import { CardRenderer } from './CardTemplates';
 import { FocusRail } from '@/components/ui/focus-rail';
 
 export const CarbonSignatureStudio = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { profile } = useProfile();
+  const { score: carbonScore, rank, monthlyData } = useCarbon();
   const cardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -153,7 +155,7 @@ export const CarbonSignatureStudio = ({ isOpen, onClose }: { isOpen: boolean; on
                 meta: `Theme 0${idx + 1}`,
                 node: (
                   <div className="w-[1080px] h-[1920px] origin-top-left flex pointer-events-none" style={{ transform: 'scale(0.2037)' }}>
-                    <CardRenderer templateId="signature" themeId={t.id} profile={profile} quote={quote} />
+                    <CardRenderer templateId="signature" themeId={t.id} profile={profile} quote={quote} carbonScore={carbonScore} rank={rank} monthlyData={monthlyData} />
                   </div>
                 )
               }))}
@@ -167,7 +169,7 @@ export const CarbonSignatureStudio = ({ isOpen, onClose }: { isOpen: boolean; on
           {/* Hidden Export Node (rendered exactly at 1080x1920 off-screen) */}
           <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
             <div ref={cardRef} className="w-[1080px] h-[1920px]">
-              <CardRenderer templateId="signature" themeId={selectedTheme} profile={profile} quote={quote} />
+              <CardRenderer templateId="signature" themeId={selectedTheme} profile={profile} quote={quote} carbonScore={carbonScore} rank={rank} monthlyData={monthlyData} />
             </div>
           </div>
 
