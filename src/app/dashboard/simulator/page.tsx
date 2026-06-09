@@ -3,9 +3,8 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from "recharts";
-import { Car, Bus, Drumstick, Zap, Sun, ShoppingBag, Recycle } from "lucide-react";
-import { mockCarbonScore } from "@/lib/mock-data";
-import { getEquivalents } from "@/lib/carbon/calculator";
+import { useCarbon } from "@/lib/contexts/CarbonContext";
+import { simulateChanges } from "@/lib/carbon/engine";
 import { formatCO2 } from "@/lib/utils/formatters";
 import AnimatedCounter from "@/components/charts/AnimatedCounter";
 import { staggerContainer, fadeInUp } from "@/lib/utils/animations";
@@ -16,37 +15,39 @@ interface SliderConfig {
   label: string;
   iconName: string;
   category: string;
-  maxSavingsKg: number;
 }
 
 const sliders: SliderConfig[] = [
-  { key: "car", label: "Reduce personal driving", iconName: "Car", category: "transport", maxSavingsKg: 1200 },
-  { key: "publicTransport", label: "Increase public transit", iconName: "Bus", category: "transport", maxSavingsKg: 400 },
-  { key: "meat", label: "Reduce meat consumption", iconName: "Utensils", category: "food", maxSavingsKg: 800 },
-  { key: "electricity", label: "Optimize home energy", iconName: "Zap", category: "energy", maxSavingsKg: 600 },
-  { key: "renewable", label: "Adopt solar power", iconName: "Sun", category: "energy", maxSavingsKg: 500 },
-  { key: "shopping", label: "Buy secondhand goods", iconName: "ShoppingBag", category: "shopping", maxSavingsKg: 400 },
-  { key: "recycling", label: "Maximize recycling", iconName: "Recycle", category: "waste", maxSavingsKg: 200 },
+  { key: "car", label: "Reduce personal driving", iconName: "Car", category: "transport" },
+  { key: "publicTransport", label: "Increase public transit", iconName: "Bus", category: "transport" },
+  { key: "meat", label: "Reduce meat consumption", iconName: "Utensils", category: "food" },
+  { key: "electricity", label: "Optimize home energy", iconName: "Zap", category: "energy" },
+  { key: "renewable", label: "Adopt solar power", iconName: "Sun", category: "energy" },
+  { key: "shopping", label: "Buy secondhand goods", iconName: "ShoppingBag", category: "shopping" },
+  { key: "recycling", label: "Maximize recycling", iconName: "Recycle", category: "waste" },
 ];
 
 export default function SimulatorPage() {
+  const { emissions } = useCarbon();
+  
   const [values, setValues] = useState<Record<string, number>>(
     Object.fromEntries(sliders.map((s) => [s.key, 0]))
   );
 
-  const baseline = mockCarbonScore.totalKgCo2Yearly;
+  const baseline = emissions.total;
 
-  const totalSavings = useMemo(() => {
-    return sliders.reduce((sum, s) => sum + (values[s.key] / 100) * s.maxSavingsKg, 0);
-  }, [values]);
+  const simulation = useMemo(() => {
+    return simulateChanges(emissions, values);
+  }, [emissions, values]);
 
-  const simulated = baseline - totalSavings;
-  const reductionPct = (totalSavings / baseline) * 100;
-  const equivalents = getEquivalents(totalSavings);
+  const totalSavings = simulation.reductionKg;
+  const simulated = simulation.simulatedKg;
+  const reductionPct = simulation.reductionPct;
+  const equivalents = simulation.equivalents;
 
   const comparisonData = [
-    { name: "Current", value: baseline, fill: "#ECE8DA" }, // Baseline gray
-    { name: "Simulated", value: Math.max(0, simulated), fill: "#146E45" }, // Primary green
+    { name: "Current", value: baseline, fill: "#ECE8DA" },
+    { name: "Simulated", value: Math.max(0, simulated), fill: "#146E45" },
   ];
 
   return (
@@ -70,77 +71,91 @@ export default function SimulatorPage() {
           </div>
           
           <div className="space-y-10">
-            {sliders.map((s) => (
-              <div key={s.key} className="group">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gt-bg border border-gt-border flex items-center justify-center text-gt-dark shadow-sm group-hover:border-gt-primary group-hover:text-gt-primary transition-colors">
-                      <IconRenderer name={s.iconName} size={20} strokeWidth={2.5} />
+            {sliders.map((s) => {
+              // Calculate the max savings for this specific slider based on live emissions
+              const categoryEmission = emissions[s.category as keyof typeof emissions] || 0;
+              const maxSavingsKg = Math.round(
+                s.key === "car" ? categoryEmission * 0.5 :
+                s.key === "publicTransport" ? categoryEmission * 0.2 :
+                s.key === "meat" ? categoryEmission * 0.4 :
+                s.key === "electricity" ? categoryEmission * 0.3 :
+                s.key === "renewable" ? categoryEmission * 0.5 :
+                s.key === "shopping" ? categoryEmission * 0.5 :
+                categoryEmission * 0.4
+              );
+
+              return (
+                <div key={s.key} className="group">
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-gt-bg border border-gt-border flex items-center justify-center text-gt-dark shadow-sm group-hover:border-gt-primary group-hover:text-gt-primary transition-colors">
+                        <IconRenderer name={s.iconName} size={20} strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <span className="text-base font-bold text-gt-dark block leading-tight">{s.label}</span>
+                        <span className="text-xs font-semibold text-gt-gray uppercase tracking-wider">{s.category}</span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-base font-bold text-gt-dark block leading-tight">{s.label}</span>
-                      <span className="text-xs font-semibold text-gt-gray uppercase tracking-wider">{s.category}</span>
+                    <div className="text-right">
+                      <span className="text-xl font-extrabold text-gt-primary block">
+                        {values[s.key]}%
+                      </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xl font-extrabold text-gt-primary block">
-                      {values[s.key]}%
+                  
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={values[s.key]}
+                    onChange={(e) =>
+                      setValues((prev) => ({ ...prev, [s.key]: Number(e.target.value) }))
+                    }
+                    className="w-full h-3 bg-gt-bg border border-gt-border rounded-full appearance-none cursor-pointer focus:outline-none transition-all"
+                    style={{
+                      background: `linear-gradient(to right, #146E45 ${values[s.key]}%, transparent ${values[s.key]}%)`,
+                    }}
+                    aria-label={s.label}
+                  />
+                  
+                  <style>{`
+                    input[type="range"]::-webkit-slider-thumb {
+                      -webkit-appearance: none;
+                      width: 28px; height: 28px;
+                      border-radius: 50%;
+                      background: #FFFFFF;
+                      border: 3px solid #146E45;
+                      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+                      cursor: pointer;
+                      margin-top: -1.5px;
+                      transition: transform 0.1s;
+                    }
+                    input[type="range"]::-webkit-slider-thumb:hover {
+                      transform: scale(1.1);
+                    }
+                    input[type="range"]::-moz-range-thumb {
+                      width: 28px; height: 28px;
+                      border-radius: 50%;
+                      background: #FFFFFF;
+                      border: 3px solid #146E45;
+                      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+                      cursor: pointer;
+                      transition: transform 0.1s;
+                    }
+                    input[type="range"]::-moz-range-thumb:hover {
+                      transform: scale(1.1);
+                    }
+                  `}</style>
+                  
+                  <div className="flex justify-between text-xs font-semibold mt-3">
+                    <span className="text-gt-gray">0%</span>
+                    <span className="text-gt-primary bg-gt-primary/5 px-2 py-0.5 rounded border border-gt-primary/10">
+                      Saves up to {formatCO2(Math.round((values[s.key] / 100) * maxSavingsKg))} CO₂
                     </span>
                   </div>
                 </div>
-                
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={values[s.key]}
-                  onChange={(e) =>
-                    setValues((prev) => ({ ...prev, [s.key]: Number(e.target.value) }))
-                  }
-                  className="w-full h-3 bg-gt-bg border border-gt-border rounded-full appearance-none cursor-pointer focus:outline-none transition-all"
-                  style={{
-                    background: `linear-gradient(to right, #146E45 ${values[s.key]}%, transparent ${values[s.key]}%)`,
-                  }}
-                  aria-label={s.label}
-                />
-                
-                <style>{`
-                  input[type="range"]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    width: 28px; height: 28px;
-                    border-radius: 50%;
-                    background: #FFFFFF;
-                    border: 3px solid #146E45;
-                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-                    cursor: pointer;
-                    margin-top: -1.5px;
-                    transition: transform 0.1s;
-                  }
-                  input[type="range"]::-webkit-slider-thumb:hover {
-                    transform: scale(1.1);
-                  }
-                  input[type="range"]::-moz-range-thumb {
-                    width: 28px; height: 28px;
-                    border-radius: 50%;
-                    background: #FFFFFF;
-                    border: 3px solid #146E45;
-                    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-                    cursor: pointer;
-                    transition: transform 0.1s;
-                  }
-                  input[type="range"]::-moz-range-thumb:hover {
-                    transform: scale(1.1);
-                  }
-                `}</style>
-                
-                <div className="flex justify-between text-xs font-semibold mt-3">
-                  <span className="text-gt-gray">0%</span>
-                  <span className="text-gt-primary bg-gt-primary/5 px-2 py-0.5 rounded border border-gt-primary/10">
-                    Saves up to {formatCO2((values[s.key] / 100) * s.maxSavingsKg)} kg CO₂
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </motion.div>
 
