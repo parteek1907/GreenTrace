@@ -12,7 +12,12 @@ describe("Calculator Utils", () => {
       wasteKg: 50,
       score: 80,
       percentile: 90,
-      dateCalculated: new Date().toISOString()
+      dateCalculated: new Date().toISOString(),
+      id: "mock-1",
+      userId: "user-1",
+      assessmentId: "assessment-1",
+      grade: "A",
+      createdAt: new Date().toISOString()
     };
 
     const breakdown = getBreakdown(mockScore);
