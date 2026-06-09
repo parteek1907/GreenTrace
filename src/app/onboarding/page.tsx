@@ -377,7 +377,7 @@ export default function OnboardingPage() {
 
                     {field.type === "select" && (
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        {field.options?.map((opt) => {
+                        {(field as any).options?.map((opt: any) => {
                           const isSelected = formData[field.key] === opt.value;
                           const OptIcon = opt.icon;
                           return (
