@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -59,7 +59,9 @@ export default function DashboardLayout({
 }) {
   return (
     <ProfileProvider>
-      <DashboardInner>{children}</DashboardInner>
+      <Suspense fallback={<div className="h-screen w-screen bg-gt-bg" />}>
+        <DashboardInner>{children}</DashboardInner>
+      </Suspense>
     </ProfileProvider>
   );
 }

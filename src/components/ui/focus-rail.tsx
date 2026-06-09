@@ -38,7 +38,7 @@ function wrap(min: number, max: number, v: number) {
  * Base spring for spatial movement (x/z)
  */
 const BASE_SPRING = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 300,
   damping: 30,
   mass: 1,
@@ -49,7 +49,7 @@ const BASE_SPRING = {
  * Bouncier spring specifically for the visual "Click/Tap" feedback on the center card
  */
 const TAP_SPRING = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 450,
   damping: 18, // Lower damping = subtle overshoot/wobble "tap"
   mass: 1,
@@ -228,9 +228,9 @@ export function FocusRail({
                   opacity: opacity,
                   filter: `brightness(${brightness})`,
                 }}
-                transition={(val) => {
-                    if (val === "scale") return TAP_SPRING;
-                    return BASE_SPRING;
+                transition={{
+                  default: BASE_SPRING,
+                  scale: TAP_SPRING,
                 }}
                 style={{
                   transformStyle: "preserve-3d",
