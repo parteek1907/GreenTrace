@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { Leaf } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 /**
@@ -46,10 +47,8 @@ export default function Navbar() {
 
         {/* Centered Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="w-8 h-8 relative transition-transform group-hover:scale-105">
-            <Image src="/logo.png" alt="GreenTrace Logo" fill className="object-contain brightness-0 invert" />
-          </div>
-          <span className="text-lg font-extrabold tracking-tight text-white hidden sm:block">
+          <Leaf className="w-6 h-6 text-gt-primary transition-transform group-hover:scale-110" strokeWidth={2.5} />
+          <span className="text-lg font-extrabold tracking-tight text-white hidden sm:block uppercase">
             GreenTrace
           </span>
         </Link>
@@ -62,7 +61,7 @@ export default function Navbar() {
             </Button>
           </Link>
           <Link href="/signup">
-            <Button variant="primary" size="sm" className="!rounded-full shadow-lg text-sm font-bold bg-[#90B816] text-gt-dark hover:bg-white px-6 py-2 transition-all duration-300 border-none" magnetic>
+            <Button variant="primary" size="sm" className="!rounded-full shadow-lg text-sm font-bold bg-[#90B816] text-gt-dark hover:brightness-110 px-6 py-2 transition-all duration-300 border-none" magnetic>
               Get Started
             </Button>
           </Link>
@@ -111,6 +110,13 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="flex flex-col gap-3 pt-4 mt-2 border-t border-white/10">
+                {/* Mobile Logo */}
+                <div className="flex items-center justify-center gap-2 mb-4 mt-2">
+                  <Leaf className="w-6 h-6 text-gt-primary" strokeWidth={2.5} />
+                  <span className="text-lg font-extrabold tracking-tight text-white uppercase">
+                    GreenTrace
+                  </span>
+                </div>
                 <Link href="/login" className="w-full">
                   <Button variant="ghost" className="w-full text-white font-bold h-12 rounded-full border border-white/20">
                     Log in
