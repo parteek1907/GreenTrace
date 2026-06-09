@@ -365,13 +365,13 @@ export default function OnboardingPage() {
 
                     {field.type === "range" && (
                       <PremiumSlider 
-                        min={field.min!} 
-                        max={field.max!} 
-                        step={field.step!} 
+                        min={(field as any).min} 
+                        max={(field as any).max} 
+                        step={(field as any).step} 
                         value={formData[field.key] as number} 
                         onChange={(val) => updateField(field.key, val)}
-                        unit={field.unit}
-                        icon={field.icon}
+                        unit={(field as any).unit}
+                        icon={(field as any).icon}
                       />
                     )}
 
