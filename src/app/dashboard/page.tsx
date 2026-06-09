@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PieChart, Pie, Cell, ComposedChart, Area, Bar, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { PieChart, Pie, Cell, ComposedChart, Bar, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Target, Globe, TrendingDown, Medal, ArrowRight, Activity, Leaf, BatteryCharging, Orbit } from "lucide-react";
-import { mockCarbonScore, mockMonthlyData, mockRecommendations, mockActivityFeed } from "@/lib/mock-data";
+import { useCarbon } from "@/lib/contexts/CarbonContext";
+import { useProfile } from "@/lib/contexts/ProfileContext";
 import { getBreakdown } from "@/lib/carbon/calculator";
 import { formatCO2 } from "@/lib/utils/formatters";
 import AnimatedCounter from "@/components/charts/AnimatedCounter";
@@ -12,18 +13,29 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import IconRenderer from "@/components/ui/IconRenderer";
 
-const breakdown = getBreakdown(mockCarbonScore);
-
 export default function DashboardPage() {
-  const currentMonth = mockMonthlyData[mockMonthlyData.length - 1];
-  const prevMonth = mockMonthlyData[mockMonthlyData.length - 2];
-  const monthlyReduction = prevMonth.totalKg - currentMonth.totalKg;
-  const reductionPct = (monthlyReduction / prevMonth.totalKg) * 100;
+  const { score: carbonScore, monthlyData, recommendations, rank } = useCarbon();
+  const { profile } = useProfile();
+  
+  const breakdown = getBreakdown(carbonScore);
+
+  const currentMonth = monthlyData[monthlyData.length - 1];
+  const prevMonth = monthlyData[monthlyData.length - 2];
+  const monthlyReduction = prevMonth ? prevMonth.totalKg - currentMonth.totalKg : 0;
+  const reductionPct = prevMonth && prevMonth.totalKg > 0 ? (monthlyReduction / prevMonth.totalKg) * 100 : 0;
 
   // Data for the Hero Radial Score
   const scoreData = [
-    { name: "Score", value: mockCarbonScore.score, fill: "#146E45" }, // Primary
-    { name: "Remaining", value: 100 - mockCarbonScore.score, fill: "#ECE8DA" } // Border
+    { name: "Score", value: carbonScore.score, fill: "#146E45" }, // Primary
+    { name: "Remaining", value: 100 - carbonScore.score, fill: "#ECE8DA" } // Border
+  ];
+
+  // Activity feed derived from live data
+  const activityFeed = [
+    { id: "act-1", type: "assessment", description: `Carbon assessment calculated: ${carbonScore.grade} grade`, time: "Just now", icon: "BarChart3" },
+    { id: "act-2", type: "rank", description: `Sustainability rank: ${rank.name}`, time: "Just now", icon: "Trophy" },
+    { id: "act-3", type: "emissions", description: `Annual footprint: ${formatCO2(carbonScore.totalKgCo2Yearly)} CO₂/year`, time: "Just now", icon: "Globe" },
+    { id: "act-4", type: "recommendation", description: recommendations[0]?.title || "Complete onboarding for recommendations", time: "Just now", icon: "Lightbulb" },
   ];
 
   return (
@@ -33,7 +45,7 @@ export default function DashboardPage() {
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-extrabold text-gt-dark mb-2 tracking-tight">Environmental Intelligence</h1>
-          <p className="text-gt-gray font-medium">Welcome back, Jane. Here is your sustainability impact overview.</p>
+          <p className="text-gt-gray font-medium">Welcome back, {profile.firstName || "Explorer"}. Here is your sustainability impact overview.</p>
         </div>
         <div className="flex gap-3">
           <Link href="/dashboard/simulator">
@@ -93,10 +105,10 @@ export default function DashboardPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
               >
-                <AnimatedCounter value={mockCarbonScore.score} />
+                <AnimatedCounter value={carbonScore.score} />
               </motion.div>
               <div className="text-sm font-bold text-gt-primary px-3 py-1 bg-gt-primary/10 rounded-full mt-2">
-                Grade {mockCarbonScore.grade}
+                Grade {carbonScore.grade}
               </div>
             </div>
           </div>
@@ -104,11 +116,11 @@ export default function DashboardPage() {
           <div className="grid grid-cols-2 gap-4 w-full mt-6 pt-6 border-t border-gt-border z-10">
             <div className="text-center">
               <div className="text-xs font-bold text-gt-gray uppercase tracking-wider mb-1">Percentile</div>
-              <div className="text-lg font-bold text-gt-dark">Top {100 - mockCarbonScore.percentile}%</div>
+              <div className="text-lg font-bold text-gt-dark">Top {100 - carbonScore.percentile}%</div>
             </div>
             <div className="text-center">
-              <div className="text-xs font-bold text-gt-gray uppercase tracking-wider mb-1">Trend</div>
-              <div className="text-lg font-bold text-gt-success">+{reductionPct.toFixed(1)}%</div>
+              <div className="text-xs font-bold text-gt-gray uppercase tracking-wider mb-1">Rank</div>
+              <div className="text-lg font-bold text-gt-success">{rank.name}</div>
             </div>
           </div>
         </motion.div>
@@ -128,7 +140,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <div className="text-4xl font-extrabold text-gt-dark tracking-tight">
-                <AnimatedCounter value={mockCarbonScore.totalKgCo2Yearly} />
+                <AnimatedCounter value={carbonScore.totalKgCo2Yearly} />
               </div>
               <div className="text-sm font-medium text-gt-gray mt-1">kilograms CO₂/year</div>
             </div>
@@ -143,13 +155,13 @@ export default function DashboardPage() {
                 <TrendingDown className="w-6 h-6" />
               </div>
               <span className="text-xs font-bold px-3 py-1 bg-gt-success/10 text-gt-success rounded-lg border border-gt-success/20">
-                On Track
+                {reductionPct > 0 ? "On Track" : "Baseline"}
               </span>
             </div>
             <div>
               <div className="text-sm font-bold text-gt-gray uppercase tracking-wider mb-2">Monthly Reduction</div>
               <div className="text-4xl font-extrabold text-gt-dark tracking-tight">
-                <AnimatedCounter value={monthlyReduction} />
+                <AnimatedCounter value={Math.abs(monthlyReduction)} />
               </div>
               <div className="text-sm font-medium text-gt-gray mt-1">kilograms avoided</div>
             </div>
@@ -185,9 +197,9 @@ export default function DashboardPage() {
             </div>
             <div>
               <div className="text-4xl font-extrabold tracking-tight">
-                5,000 <span className="text-2xl font-bold text-white/80">kg</span>
+                {formatCO2(Math.round(carbonScore.totalKgCo2Yearly * 0.75))} <span className="text-2xl font-bold text-white/80">kg</span>
               </div>
-              <div className="text-sm font-medium text-white/80 mt-1">Next milestone by Dec 2026</div>
+              <div className="text-sm font-medium text-white/80 mt-1">25% reduction target by Dec 2026</div>
             </div>
           </div>
 
@@ -238,7 +250,7 @@ export default function DashboardPage() {
             {/* Center Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className="text-xs font-bold text-gt-gray uppercase tracking-wider mb-1">Total</span>
-              <span className="text-2xl font-extrabold text-gt-dark">{formatCO2(mockCarbonScore.totalKgCo2Yearly)}</span>
+              <span className="text-2xl font-extrabold text-gt-dark">{formatCO2(carbonScore.totalKgCo2Yearly)}</span>
             </div>
           </div>
 
@@ -270,7 +282,7 @@ export default function DashboardPage() {
           
           <div className="flex-1 min-h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={mockMonthlyData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+              <ComposedChart data={monthlyData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ECE8DA" />
                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 13, fill: "#6B7280", fontWeight: 600 }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 13, fill: "#6B7280", fontWeight: 600 }} />
@@ -298,7 +310,7 @@ export default function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-4">
-            {mockRecommendations.filter(r => !r.isCompleted).slice(0, 3).map((rec) => (
+            {recommendations.filter(r => !r.isCompleted).slice(0, 3).map((rec) => (
               <div key={rec.id} className="group flex items-start gap-5 p-5 rounded-2xl border border-gt-border hover:border-gt-primary bg-white hover:bg-gt-bg/50 transition-all shadow-sm hover:shadow-md cursor-pointer">
                 <div className="w-12 h-12 rounded-2xl bg-gt-bg border border-gt-border flex items-center justify-center text-gt-dark shrink-0 group-hover:scale-110 transition-transform">
                   {rec.category === "transport" ? <Target className="w-6 h-6" /> : rec.category === "food" ? <Leaf className="w-6 h-6" /> : <BatteryCharging className="w-6 h-6" />}
@@ -329,7 +341,7 @@ export default function DashboardPage() {
             </button>
           </div>
           <div className="relative border-l-2 border-gt-border ml-6 space-y-8 pb-2">
-            {mockActivityFeed.slice(0, 4).map((activity, i) => (
+            {activityFeed.slice(0, 4).map((activity) => (
               <div key={activity.id} className="relative pl-8 group">
                 <div className="absolute -left-[21px] top-1 w-10 h-10 rounded-full bg-white border-2 border-gt-border flex items-center justify-center text-gt-dark shadow-sm z-10 group-hover:border-gt-primary group-hover:text-gt-primary transition-colors">
                   <IconRenderer name={activity.icon} size={18} strokeWidth={2.5} />
