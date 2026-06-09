@@ -52,8 +52,6 @@ const navItems = [
   { label: "Reports", href: "#", icon: FileText },
 ];
 
-import Footer from "@/components/landing/Footer";
-
 export default function DashboardLayout({
   children,
 }: {
@@ -395,7 +393,6 @@ function DashboardInner({
           <div className="p-6 lg:p-10 max-w-[1400px] mx-auto w-full min-h-full pb-24">
             {children}
           </div>
-          <Footer />
         </motion.main>
       </div>
     </div>
