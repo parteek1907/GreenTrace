@@ -53,6 +53,8 @@ const navItems = [
   { label: "Reports", href: "#", icon: FileText },
 ];
 
+import Footer from "@/components/landing/Footer";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -389,11 +391,12 @@ function DashboardInner({
           initial={isNew ? { opacity: 0, y: 40 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: isNew ? 0.7 : 0 }}
-          className="flex-1 overflow-y-auto p-6 lg:p-10 relative"
+          className="flex-1 overflow-y-auto relative"
         >
-          <div className="max-w-[1400px] mx-auto w-full">
+          <div className="p-6 lg:p-10 max-w-[1400px] mx-auto w-full min-h-full pb-24">
             {children}
           </div>
+          <Footer />
         </motion.main>
       </div>
     </div>
