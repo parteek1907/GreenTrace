@@ -199,7 +199,7 @@ export default function OnboardingPage() {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const activeFeedback = step.fields.find(f => f.type === "select")?.feedback?.[formData[step.fields.find(f => f.type === "select")?.key || ""] as string];
+  const activeFeedback = (step.fields.find(f => f.type === "select") as any)?.feedback?.[formData[step.fields.find(f => f.type === "select")?.key || ""] as string];
 
   if (completed) {
     return <CarbonTwinCreation />;
