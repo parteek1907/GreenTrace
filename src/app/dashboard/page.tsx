@@ -8,12 +8,14 @@ import { useCarbon } from "@/lib/contexts/CarbonContext";
 import { useProfile } from "@/lib/contexts/ProfileContext";
 import { getBreakdown } from "@/lib/carbon/calculator";
 import { formatCO2 } from "@/lib/utils/formatters";
-import AnimatedCounter from "@/components/charts/AnimatedCounter";
+import dynamic from "next/dynamic";
 import { staggerContainer, fadeInUp } from "@/lib/utils/animations";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import IconRenderer from "@/components/ui/IconRenderer";
-import { CarbonSignatureStudio } from "@/components/dashboard/CarbonSignature/CarbonSignatureStudio";
+
+const AnimatedCounter = dynamic(() => import("@/components/charts/AnimatedCounter"), { ssr: false });
+const CarbonSignatureStudio = dynamic(() => import("@/components/dashboard/CarbonSignature/CarbonSignatureStudio").then(mod => mod.CarbonSignatureStudio), { ssr: false });
 
 export default function DashboardPage() {
   const { score: carbonScore, monthlyData, recommendations, rank } = useCarbon();
