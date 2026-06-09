@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Mail, Calendar, MapPin, Award, Leaf, Flame, Droplet, Mountain, Trees, Sun, Zap, Bike, Check, Loader2, ChevronDown, Search, Share2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProfile } from "@/lib/contexts/ProfileContext";
-import { CarbonSignatureModal } from "@/components/dashboard/CarbonSignature/CarbonSignatureModal";
+import { CarbonSignatureStudio } from "@/components/dashboard/CarbonSignature/CarbonSignatureStudio";
 
 const COUNTRIES = [
   "United States", "United Kingdom", "Canada", "Australia", "Germany", "France", "Japan",
@@ -118,7 +118,10 @@ export default function ProfilePage() {
                   {AVATAR_ICONS.map(({ id, icon: Icon }) => (
                     <button 
                       key={id} 
-                      onClick={() => setDraftProfile({ ...draftProfile, avatar: id })} 
+                      onClick={() => {
+                        setDraftProfile({ ...draftProfile, avatar: id });
+                        setProfile({ ...profile, avatar: id });
+                      }} 
                       className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                         draftProfile.avatar === id 
                           ? 'bg-gt-primary text-white shadow-[0_4px_12px_rgba(20,110,69,0.3)] scale-110' 
@@ -335,7 +338,7 @@ export default function ProfilePage() {
     </div>
 
       {/* Advanced Carbon Signature Generator */}
-      <CarbonSignatureModal 
+      <CarbonSignatureStudio 
         isOpen={isShareModalOpen} 
         onClose={() => setIsShareModalOpen(false)} 
       />

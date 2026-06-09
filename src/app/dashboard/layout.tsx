@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Tabs } from "@ark-ui/react/tabs";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,8 +25,22 @@ import {
   CreditCard,
   Palette,
   LifeBuoy,
-  Leaf
+  Leaf,
+  Flame,
+  Droplet,
+  Mountain,
+  Trees,
+  Sun
 } from "lucide-react";
+
+const AVATAR_ICONS = [
+  { id: "leaf", icon: Leaf },
+  { id: "flame", icon: Flame },
+  { id: "droplet", icon: Droplet },
+  { id: "mountain", icon: Mountain },
+  { id: "trees", icon: Trees },
+  { id: "sun", icon: Sun },
+];
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -57,11 +71,13 @@ function DashboardInner({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isNew = searchParams.get("new") === "true";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const { profile } = useProfile();
-  const initials = `${profile.firstName[0] || ''}${profile.lastName[0] || ''}`.toUpperCase();
+  const CurrentIcon = AVATAR_ICONS.find(a => a.id === profile.avatar)?.icon || Leaf;
 
   const tips = [
     "Lowering your thermostat by 2°C saves up to 180kg CO₂ per year.",
@@ -77,7 +93,12 @@ function DashboardInner({
   return (
     <div className="h-screen overflow-hidden flex bg-gt-bg text-gt-dark font-sans">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-[280px] bg-gt-primary text-white shadow-2xl z-20 shrink-0">
+      <motion.aside 
+        initial={isNew ? { x: -300, opacity: 0 } : false}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: isNew ? 0.2 : 0 }}
+        className="hidden lg:flex flex-col w-[280px] bg-gt-primary text-white shadow-2xl z-20 shrink-0"
+      >
         {/* Branding */}
         <div className="px-8 py-8">
           <Link href="/dashboard" className="flex items-center gap-3 group">
@@ -146,13 +167,18 @@ function DashboardInner({
             <circle cx="45" cy="52" r="3" fill="#FFFFFF" opacity="0.6" />
           </svg>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
         {/* Topbar */}
-        <header className="h-[88px] bg-gt-surface border-b border-gt-border px-6 lg:px-10 flex items-center justify-between z-10 shadow-sm shrink-0">
+        <motion.header 
+          initial={isNew ? { y: -100, opacity: 0 } : false}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: isNew ? 0.4 : 0 }}
+          className="h-[88px] bg-gt-surface border-b border-gt-border px-6 lg:px-10 flex items-center justify-between z-10 shadow-sm shrink-0"
+        >
           {/* Mobile Menu Toggle & Branding */}
           <div className="flex items-center gap-4 lg:hidden">
             <button
@@ -193,12 +219,11 @@ function DashboardInner({
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-3 p-1.5 pr-4 rounded-full border border-gt-border hover:border-gt-primary transition-all bg-gt-surface shadow-sm hover:shadow group"
               >
-                <div className="w-8 h-8 rounded-full bg-gt-secondary flex items-center justify-center text-white font-bold text-xs tracking-wider">
-                  {initials}
+                <div className="w-8 h-8 rounded-full bg-gt-primary flex items-center justify-center text-white shadow-[0_2px_8px_rgba(20,110,69,0.25)]">
+                  <CurrentIcon className="w-4 h-4" strokeWidth={2.5} />
                 </div>
                 <div className="hidden sm:flex flex-col items-start">
                   <span className="text-sm font-bold text-gt-dark leading-none group-hover:text-gt-primary transition-colors">{profile.firstName} {profile.lastName}</span>
-                  <span className="text-xs font-medium text-gt-gray mt-1 leading-none">Pro Plan</span>
                 </div>
                 <Settings className="w-4 h-4 text-gt-gray group-hover:text-gt-primary transition-colors ml-2 hidden sm:block" />
               </button>
@@ -219,8 +244,8 @@ function DashboardInner({
                       {/* User Header */}
                       <div className="p-4 border-b border-gt-border bg-gt-bg">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gt-secondary flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-inner">
-                            {initials}
+                          <div className="w-10 h-10 rounded-full bg-gt-primary flex items-center justify-center text-white shadow-inner">
+                            <CurrentIcon className="w-5 h-5" strokeWidth={2.5} />
                           </div>
                           <div>
                             <p className="text-sm font-bold text-gt-dark">{profile.firstName} {profile.lastName}</p>
@@ -255,7 +280,7 @@ function DashboardInner({
               </AnimatePresence>
             </div>
           </div>
-        </header>
+        </motion.header>
 
         {/* Mobile Sidebar Overlay */}
         <AnimatePresence>
@@ -349,11 +374,16 @@ function DashboardInner({
         </AnimatePresence>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-10 relative">
+        <motion.main 
+          initial={isNew ? { opacity: 0, y: 40 } : false}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: isNew ? 0.7 : 0 }}
+          className="flex-1 overflow-y-auto p-6 lg:p-10 relative"
+        >
           <div className="max-w-[1400px] mx-auto w-full">
             {children}
           </div>
-        </main>
+        </motion.main>
       </div>
     </div>
   );
