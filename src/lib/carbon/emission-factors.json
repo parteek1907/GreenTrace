@@ -1,0 +1,62 @@
+{
+  "transport": {
+    "weight": 0.30,
+    "carEmissionsKgPerKm": {
+      "petrol": 0.21,
+      "diesel": 0.27,
+      "hybrid": 0.12,
+      "electric": 0.05,
+      "none": 0
+    },
+    "weeksPerYear": 52,
+    "flightEmissionsKgPerFlight": 986,
+    "publicTransitKgPerKm": 0.089
+  },
+  "food": {
+    "weight": 0.25,
+    "dietAnnualKg": {
+      "vegan": 600,
+      "vegetarian": 1200,
+      "pescatarian": 1600,
+      "mixed": 2100,
+      "heavy_meat": 3300
+    },
+    "localFoodReductionMax": 0.15
+  },
+  "energy": {
+    "weight": 0.20,
+    "electricityKgPerKwh": 0.42,
+    "monthsPerYear": 12,
+    "heatingAnnualKg": {
+      "gas": 2200,
+      "electric": 1400,
+      "heat_pump": 600,
+      "solar": 100
+    },
+    "renewableReductionMax": 0.80
+  },
+  "shopping": {
+    "weight": 0.15,
+    "clothingKgPerItem": 25,
+    "monthsPerYear": 12,
+    "electronicsKgPerDevice": 300,
+    "secondhandReductionMax": 0.70
+  },
+  "waste": {
+    "weight": 0.10,
+    "baseAnnualKg": 500
+  },
+  "scoring": {
+    "globalAverageKg": 4660,
+    "maxScore": 100,
+    "scalingFactor": 50
+  },
+  "ranks": [
+    { "minScore": 90, "name": "Eco Pioneer", "description": "You are leading the charge toward a sustainable future." },
+    { "minScore": 75, "name": "Climate Guardian", "description": "Your lifestyle choices significantly protect the planet." },
+    { "minScore": 60, "name": "Green Advocate", "description": "You are making meaningful environmental contributions." },
+    { "minScore": 45, "name": "Carbon Conscious", "description": "You are aware and taking steps to reduce your impact." },
+    { "minScore": 30, "name": "Eco Learner", "description": "Your journey toward sustainability is just beginning." },
+    { "minScore": 0, "name": "Carbon Heavy", "description": "Significant lifestyle changes can make a big difference." }
+  ]
+}
