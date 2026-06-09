@@ -2,16 +2,17 @@
 
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { mockCarbonScore } from "@/lib/mock-data";
+import { useCarbon } from "@/lib/contexts/CarbonContext";
 import { getBreakdown } from "@/lib/carbon/calculator";
 import { formatCO2 } from "@/lib/utils/formatters";
 import AnimatedCounter from "@/components/charts/AnimatedCounter";
 import { staggerContainer, fadeInUp } from "@/lib/utils/animations";
 import IconRenderer from "@/components/ui/IconRenderer";
 
-const breakdown = getBreakdown(mockCarbonScore);
-
 export default function BreakdownPage() {
+  const { score: carbonScore } = useCarbon();
+  const breakdown = getBreakdown(carbonScore);
+
   return (
     <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-8 pb-12">
       <motion.div variants={fadeInUp}>
