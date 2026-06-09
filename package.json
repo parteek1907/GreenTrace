@@ -9,14 +9,20 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ark-ui/react": "^5.37.2",
+    "@radix-ui/react-accordion": "^1.2.13",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.108.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^1.17.0",
     "next": "16.2.7",
+    "qrcode.react": "^4.2.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
