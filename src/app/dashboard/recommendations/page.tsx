@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { mockRecommendations } from "@/lib/mock-data";
+import { useCarbon } from "@/lib/contexts/CarbonContext";
 import { formatCO2 } from "@/lib/utils/formatters";
 import Button from "@/components/ui/Button";
 import { staggerContainer, fadeInUp } from "@/lib/utils/animations";
@@ -18,15 +18,15 @@ const categoryIcons: Record<string, string> = {
 };
 
 export default function RecommendationsPage() {
+  const { recommendations } = useCarbon();
+  
   const [filter, setFilter] = useState<string>("all");
-  const [completed, setCompleted] = useState<string[]>(
-    mockRecommendations.filter((r) => r.isCompleted).map((r) => r.id)
-  );
+  const [completed, setCompleted] = useState<string[]>([]);
   const [dismissed, setDismissed] = useState<string[]>([]);
 
   const categories = ["all", "transport", "food", "energy", "shopping"];
 
-  const filtered = mockRecommendations.filter((r) => {
+  const filtered = recommendations.filter((r) => {
     if (dismissed.includes(r.id)) return false;
     if (filter !== "all" && r.category !== filter) return false;
     return true;
