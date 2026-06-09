@@ -49,11 +49,11 @@ export function categoryIcon(category: string): string {
 /** Category color mapping */
 export function categoryColor(category: string): string {
   const colors: Record<string, string> = {
-    transport: "#3B82F6",
-    food: "#F59E0B",
-    energy: "#8B5CF6",
-    shopping: "#EC4899",
-    waste: "#10B981",
+    transport: "#146E45", // gt-primary
+    food: "#16A085",      // gt-teal
+    energy: "#90B816",    // gt-bright
+    shopping: "#547D48",  // gt-medium
+    waste: "#4ADE80",     // soft green
   };
   return colors[category] || "#94A3B8";
 }
