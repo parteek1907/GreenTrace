@@ -57,7 +57,7 @@ export default function DashboardPage() {
       <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-extrabold text-gt-dark mb-2 tracking-tight">Environmental Intelligence</h1>
-          <p className="text-gt-gray font-medium">Welcome back, {profile.firstName || "Explorer"}. Here is your sustainability impact overview.</p>
+          <p className="text-gt-gray font-medium">Welcome back, <span suppressHydrationWarning>{profile.firstName || "Explorer"}</span>. Here is your sustainability impact overview.</p>
         </div>
         <div className="flex gap-3">
           <Link href="/dashboard/simulator">
