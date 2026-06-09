@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Footer from "@/components/landing/Footer";
 import { Leaf, Orbit, LayoutDashboard, Flag, Monitor, Play, X, LineChart } from 'lucide-react';
 
 const UIMockup = ({ type }: { type: 'dashboard' | 'carbon-twin' | 'challenges' }) => {
@@ -172,15 +173,7 @@ export default function MobileExperience() {
             </svg>
           </div>
 
-          <div className="w-full max-w-[320px] flex flex-col gap-3 mb-16 relative z-30 fade-in-up" style={{ animationDelay: '0.6s' }}>
-            <a 
-              href="#preview"
-              className="w-full py-4 bg-gt-dark text-white rounded-2xl font-bold flex items-center justify-center gap-2 px-6 shadow-[0_8px_20px_rgba(0,0,0,0.15)] active:scale-95 transition-transform"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              See What Awaits
-            </a>
-          </div>
+
 
           <div className="w-full max-w-[340px] mb-20 text-left">
             <div className="fade-in-up" style={{ animationDelay: '0.8s' }}>
@@ -252,12 +245,7 @@ export default function MobileExperience() {
                 Open this website from any desktop or laptop browser to access the complete Greentrace experience.
               </p>
             </div>
-            <p className="text-xs font-bold text-gt-dark tracking-widest uppercase mt-12 mb-2">
-              We'll be here when you're ready.
-            </p>
-            <p className="text-[10px] font-bold text-gt-gray uppercase tracking-[0.2em]">
-              Greentrace • Environmental Intelligence
-            </p>
+            <Footer />
           </div>
 
         </main>
