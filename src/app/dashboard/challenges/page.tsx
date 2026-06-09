@@ -107,10 +107,10 @@ export default function ChallengesPage() {
                     <IconRenderer name={challenge.badgeIcon} size={28} strokeWidth={2} />
                   </div>
                   <span className={`text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider ${
-                    challenge.category === "transport" ? "bg-blue-50 text-blue-600 border border-blue-200" :
-                    challenge.category === "food" ? "bg-orange-50 text-orange-600 border border-orange-200" :
-                    challenge.category === "energy" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" :
-                    "bg-gt-success/10 text-gt-success border border-gt-success/20"
+                    challenge.category === "transport" ? "bg-gt-primary/10 text-gt-primary border border-gt-primary/20" :
+                    challenge.category === "food" ? "bg-gt-teal/10 text-gt-teal border border-gt-teal/20" :
+                    challenge.category === "energy" ? "bg-gt-bright/10 text-gt-bright border border-gt-bright/20" :
+                    "bg-gt-medium/10 text-gt-medium border border-gt-medium/20"
                   }`}>
                     {challenge.category}
                   </span>
