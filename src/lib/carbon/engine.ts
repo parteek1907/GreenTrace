@@ -118,12 +118,12 @@ function calculateWaste(): number {
 
 // ─── Core Engine ──────────────────────────────────────────────────────
 
-export function calculateEmissions(formData: FormData): CategoryEmissions {
-  const transport = calculateTransport(formData);
-  const food = calculateFood(formData);
-  const energy = calculateEnergy(formData);
-  const shopping = calculateShopping(formData);
-  const waste = calculateWaste();
+export function calculateEmissions(formData: FormData, activityOffsets: Record<string, number> = {}): CategoryEmissions {
+  const transport = Math.max(0, calculateTransport(formData) - (activityOffsets.transport || 0));
+  const food = Math.max(0, calculateFood(formData) - (activityOffsets.food || 0));
+  const energy = Math.max(0, calculateEnergy(formData) - (activityOffsets.energy || 0));
+  const shopping = Math.max(0, calculateShopping(formData) - (activityOffsets.shopping || 0));
+  const waste = Math.max(0, calculateWaste() - (activityOffsets.waste || 0));
 
   return {
     transport,
@@ -454,8 +454,8 @@ export function simulateChanges(
 
 // ─── Full Engine Run ──────────────────────────────────────────────────
 
-export function runEngine(formData: FormData): EngineResult {
-  const emissions = calculateEmissions(formData);
+export function runEngine(formData: FormData, activityOffsets: Record<string, number> = {}): EngineResult {
+  const emissions = calculateEmissions(formData, activityOffsets);
   const { score, grade, percentile } = calculateScore(emissions.total);
   const rank = getSustainabilityRank(score);
   const recommendations = generateRecommendations(formData, emissions);

@@ -47,9 +47,9 @@
     "baseAnnualKg": 500
   },
   "scoring": {
-    "globalAverageKg": 4660,
+    "globalAverageKg": 10000,
     "maxScore": 100,
-    "scalingFactor": 50
+    "scalingFactor": 40
   },
   "ranks": [
     { "minScore": 90, "name": "Eco Pioneer", "description": "You are leading the charge toward a sustainable future." },
