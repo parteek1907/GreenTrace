@@ -3,6 +3,7 @@
 import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { IllustrationBanner } from "@/components/dashboard/IllustrationBanner";
 
 import { Tabs } from "@ark-ui/react/tabs";
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,7 +50,6 @@ const navItems = [
   { label: "Challenges", href: "/dashboard/challenges", icon: Flag },
   { label: "Progress", href: "/dashboard/progress", icon: BarChart3 },
   { label: "Recommendations", href: "/dashboard/recommendations", icon: Lightbulb },
-  { label: "Reports", href: "#", icon: FileText },
 ];
 
 export default function DashboardLayout({
@@ -113,7 +113,7 @@ function DashboardInner({
         <div className="px-8 py-8">
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <Leaf className="w-8 h-8 text-white transition-transform group-hover:scale-110" strokeWidth={2.5} />
-            <span className="text-xl font-bold tracking-tight text-white group-hover:text-gt-bright transition-colors uppercase">
+            <span className="text-[17px] font-black tracking-[0.25em] text-white group-hover:text-gt-bright transition-colors uppercase whitespace-nowrap ml-1">
               GreenTrace
             </span>
           </Link>
@@ -151,7 +151,7 @@ function DashboardInner({
         </Tabs.Root>
 
         {/* Tip of the Day */}
-        <div className="mt-auto mb-6 mx-4 p-5 bg-gradient-to-br from-gt-bright to-gt-teal rounded-2xl relative shadow-[0_8px_24px_rgba(0,0,0,0.15)] overflow-hidden shrink-0 border border-white/20 min-h-[180px] flex flex-col justify-between group">
+        <div className="mt-auto mb-6 mx-4 p-5 bg-gradient-to-br from-gt-bright to-gt-teal rounded-2xl relative shadow-[0_8px_24px_rgba(0,0,0,0.15)] overflow-hidden shrink-0 border border-gt-dark/10 min-h-[240px] flex flex-col justify-between group">
           <div className="relative z-10">
             <h4 className="text-[11px] font-bold uppercase tracking-widest text-gt-dark/80 mb-3 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-gt-dark/60 animate-pulse" />
@@ -161,7 +161,7 @@ function DashboardInner({
               {dailyTip}
             </p>
           </div>
-          <Link href="/dashboard/recommendations" className="text-[12px] font-extrabold text-gt-dark bg-white/30 hover:bg-white/50 px-4 py-2 rounded-xl transition-all relative z-10 self-start backdrop-blur-md shadow-sm border border-white/40">
+          <Link href="/dashboard/explore" className="text-[12px] font-extrabold text-gt-dark bg-white/30 hover:bg-white/50 px-4 py-2 rounded-xl transition-all relative z-10 self-start backdrop-blur-md shadow-sm border border-white/40">
             Explore &rarr;
           </Link>
           
@@ -187,10 +187,18 @@ function DashboardInner({
           initial={isNew ? { y: -100, opacity: 0 } : false}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: isNew ? 0.4 : 0 }}
-          className="h-[88px] bg-gt-surface border-b border-gt-border px-6 lg:px-10 flex items-center justify-between z-10 shadow-sm shrink-0"
+          className="h-[72px] bg-gt-surface border-b border-gt-border px-6 lg:px-10 flex items-center justify-between z-40 shadow-sm shrink-0 relative"
         >
+          {/* Full-Width Background Banner */}
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.85] mix-blend-multiply overflow-hidden">
+            <IllustrationBanner id={profile.topBarIllustration} className="w-full h-full" />
+          </div>
+          
+          {/* Topbar Gradient Fade to protect text/buttons */}
+          <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-gt-surface to-transparent z-0 pointer-events-none" />
+
           {/* Mobile Menu Toggle & Branding */}
-          <div className="flex items-center gap-4 lg:hidden">
+          <div className="flex items-center gap-4 lg:hidden relative z-10">
             <button
               onClick={() => setSidebarOpen(true)}
               className="p-2 rounded-xl border border-gt-border hover:bg-gt-bg transition-colors"
@@ -203,27 +211,11 @@ function DashboardInner({
             </Link>
           </div>
 
-          {/* Search Bar (Hidden on mobile) */}
-          <div className="hidden lg:flex items-center flex-1 max-w-md">
-            <div className="relative w-full group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gt-gray group-focus-within:text-gt-primary transition-colors" />
-              <input
-                type="text"
-                placeholder="Search analytics, insights..."
-                className="w-full pl-11 pr-4 py-2.5 bg-gt-bg border border-gt-border rounded-full text-sm font-medium text-gt-dark placeholder-gt-gray focus:outline-none focus:border-gt-primary focus:ring-1 focus:ring-gt-primary focus:bg-white transition-all shadow-sm"
-              />
-            </div>
-          </div>
+          {/* Spacer replacing the old center banner slot */}
+          <div className="hidden lg:flex flex-1" />
 
           {/* Right Actions */}
-          <div className="flex items-center gap-4 ml-auto">
-            <button className="p-2.5 rounded-full bg-gt-surface border border-gt-border text-gt-gray hover:text-gt-primary hover:border-gt-primary hover:bg-gt-bg transition-all relative shadow-sm">
-              <Bell className="w-5 h-5" strokeWidth={2} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-gt-error rounded-full border-2 border-white" />
-            </button>
-            
-            <div className="h-8 w-px bg-gt-border mx-2 hidden sm:block" />
-            
+          <div className="flex items-center gap-4 ml-auto relative z-10">
             <div className="relative">
               <button 
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -272,7 +264,7 @@ function DashboardInner({
                         </Link>
                         <Link href="/dashboard/settings" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gt-dark hover:bg-gt-bg rounded-xl transition-colors">
                           <Settings className="w-4 h-4 text-gt-gray" />
-                          Account Settings
+                          Settings
                         </Link>
                       </div>
 
@@ -313,7 +305,7 @@ function DashboardInner({
                 <div className="px-6 py-8 flex items-center justify-between">
                   <Link href="/dashboard" className="flex items-center gap-3">
                     <Leaf className="w-8 h-8 text-white" strokeWidth={2.5} />
-                    <span className="text-xl font-bold tracking-tight text-white uppercase">GreenTrace</span>
+                    <span className="text-[17px] font-black tracking-[0.25em] text-white uppercase whitespace-nowrap ml-1">GreenTrace</span>
                   </Link>
                   <button onClick={() => setSidebarOpen(false)} className="p-2 text-white/70 hover:text-white bg-white/10 rounded-lg">
                     <X className="w-5 h-5" />
@@ -352,7 +344,7 @@ function DashboardInner({
                   </Tabs.List>
                 </Tabs.Root>
                 {/* Tip of the Day - Mobile */}
-                <div className="mt-auto mb-6 mx-4 p-5 bg-gradient-to-br from-gt-bright to-gt-teal rounded-2xl relative shadow-[0_8px_24px_rgba(0,0,0,0.15)] overflow-hidden shrink-0 border border-white/20 min-h-[180px] flex flex-col justify-between group">
+                <div className="mt-auto mb-6 mx-4 p-5 bg-gradient-to-br from-gt-bright to-gt-teal rounded-2xl relative shadow-[0_8px_24px_rgba(0,0,0,0.15)] overflow-hidden shrink-0 border border-gt-dark/10 min-h-[240px] flex flex-col justify-between group">
                   <div className="relative z-10">
                     <h4 className="text-[11px] font-bold uppercase tracking-widest text-gt-dark/80 mb-3 flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-gt-dark/60 animate-pulse" />
@@ -362,7 +354,7 @@ function DashboardInner({
                       {dailyTip}
                     </p>
                   </div>
-                  <Link href="/dashboard/recommendations" onClick={() => setSidebarOpen(false)} className="text-[12px] font-extrabold text-gt-dark bg-white/30 hover:bg-white/50 px-4 py-2 rounded-xl transition-all relative z-10 self-start backdrop-blur-md shadow-sm border border-white/40">
+                  <Link href="/dashboard/explore" onClick={() => setSidebarOpen(false)} className="text-[12px] font-extrabold text-gt-dark bg-white/30 hover:bg-white/50 px-4 py-2 rounded-xl transition-all relative z-10 self-start backdrop-blur-md shadow-sm border border-white/40">
                     Explore &rarr;
                   </Link>
                   

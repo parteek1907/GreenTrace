@@ -8,6 +8,7 @@ export type ProfileData = {
   email: string;
   country: string;
   avatar: string;
+  topBarIllustration: string;
 };
 
 const defaultProfile: ProfileData = {
@@ -15,7 +16,8 @@ const defaultProfile: ProfileData = {
   lastName: "Trace",
   email: "green.trace@example.com",
   country: "India",
-  avatar: "leaf"
+  avatar: "leaf",
+  topBarIllustration: "abstract-waves"
 };
 
 const emptyProfile: ProfileData = {
@@ -23,7 +25,8 @@ const emptyProfile: ProfileData = {
   lastName: "",
   email: "",
   country: "",
-  avatar: "leaf"
+  avatar: "leaf",
+  topBarIllustration: "abstract-waves"
 };
 
 type ProfileContextType = {
@@ -51,7 +54,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem("gt_user_profile");
     if (saved) {
       try {
-        setProfileState(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (!parsed.topBarIllustration) parsed.topBarIllustration = "abstract-waves";
+        setProfileState(parsed);
       } catch (e) {
         console.error("Failed to parse profile", e);
         setProfileState(defaultProfile);

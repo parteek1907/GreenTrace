@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Mail, Calendar, MapPin, Award, Leaf, Flame, Droplet, Mountain, Trees, Sun, Zap, Bike, Check, Loader2, ChevronDown, Search, Share2, X } from "lucide-react";
+import { Mail, Calendar, MapPin, Award, Leaf, Flame, Droplet, Mountain, Trees, Sun, Zap, Bike, Check, Loader2, ChevronDown, Search, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useProfile } from "@/lib/contexts/ProfileContext";
 
 const COUNTRIES = [
@@ -39,7 +40,6 @@ export default function ProfilePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -71,6 +71,13 @@ export default function ProfilePage() {
     <>
       <div className="w-full max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
+      {/* Back Navigation */}
+      <div>
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm font-medium text-gt-gray hover:text-gt-dark transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+        </Link>
+      </div>
+
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

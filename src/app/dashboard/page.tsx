@@ -13,6 +13,7 @@ import { staggerContainer, fadeInUp } from "@/lib/utils/animations";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import IconRenderer from "@/components/ui/IconRenderer";
+import { LogActivityModal } from "@/components/dashboard/LogActivityModal";
 
 const AnimatedCounter = dynamic(() => import("@/components/charts/AnimatedCounter"), { ssr: false });
 const CarbonSignatureStudio = dynamic(() => import("@/components/dashboard/CarbonSignature/CarbonSignatureStudio").then(mod => mod.CarbonSignatureStudio), { ssr: false });
@@ -21,6 +22,7 @@ export default function DashboardPage() {
   const { score: carbonScore, monthlyData, recommendations, rank } = useCarbon();
   const { profile, hasCreatedSignature } = useProfile();
   const [isSignatureStudioOpen, setIsSignatureStudioOpen] = useState(false);
+  const [isLogActivityOpen, setIsLogActivityOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleCraftSignatureClick = () => {
@@ -67,7 +69,7 @@ export default function DashboardPage() {
               <Orbit className="w-4 h-4 mr-1" /> Simulator
             </Button>
           </Link>
-          <Button variant="primary" className="font-bold shadow-md">
+          <Button variant="primary" className="font-bold shadow-md" onClick={() => setIsLogActivityOpen(true)}>
             <Activity className="w-4 h-4 mr-1" /> Log Activity
           </Button>
         </div>
@@ -419,6 +421,10 @@ export default function DashboardPage() {
       <CarbonSignatureStudio 
         isOpen={isSignatureStudioOpen} 
         onClose={() => setIsSignatureStudioOpen(false)} 
+      />
+      <LogActivityModal
+        isOpen={isLogActivityOpen}
+        onClose={() => setIsLogActivityOpen(false)}
       />
     </motion.div>
   );
