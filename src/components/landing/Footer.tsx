@@ -110,7 +110,7 @@ export default function Footer() {
             <Link href="/" className="inline-flex items-center gap-3 group relative">
               <div className="absolute inset-0 bg-gt-primary/10 blur-[40px] rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
               <Leaf className="w-8 h-8 text-gt-primary transition-transform duration-700 group-hover:rotate-12" strokeWidth={1.5} />
-              <span className="text-2xl font-bold tracking-widest text-gt-dark uppercase">
+              <span className="text-[17px] font-black tracking-[0.25em] text-gt-dark uppercase whitespace-nowrap ml-1">
                 GreenTrace
               </span>
             </Link>

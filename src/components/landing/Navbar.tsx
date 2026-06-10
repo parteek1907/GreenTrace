@@ -13,6 +13,14 @@ import Button from "@/components/ui/Button";
  */
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check on mount
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { label: "Features", href: "#features" },
@@ -29,7 +37,11 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
     >
       {/* Pill Container */}
-      <nav className="w-full max-w-[1400px] px-4 md:px-6 h-16 flex items-center justify-between rounded-full bg-transparent backdrop-blur-md border border-white/10 shadow-lg relative">
+      <nav className={`w-full max-w-[1400px] px-4 md:px-6 h-16 flex items-center justify-between rounded-full relative transition-all duration-500 ${
+        scrolled 
+          ? "bg-[#05110B]/95 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)]" 
+          : "bg-black/20 border border-white/10 shadow-sm"
+      }`}>
         
         {/* Left Nav Links */}
         <div className="hidden md:flex flex-1 items-center gap-8 justify-start">
@@ -48,7 +60,7 @@ export default function Navbar() {
         {/* Centered Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <Leaf className="w-6 h-6 text-gt-primary transition-transform group-hover:scale-110" strokeWidth={2.5} />
-          <span className="text-lg font-extrabold tracking-tight text-white hidden sm:block uppercase">
+          <span className="text-[15px] font-black tracking-[0.25em] text-white hidden sm:block uppercase whitespace-nowrap ml-1">
             GreenTrace
           </span>
         </Link>
@@ -113,7 +125,7 @@ export default function Navbar() {
                 {/* Mobile Logo */}
                 <div className="flex items-center justify-center gap-2 mb-4 mt-2">
                   <Leaf className="w-6 h-6 text-gt-primary" strokeWidth={2.5} />
-                  <span className="text-lg font-extrabold tracking-tight text-white uppercase">
+                  <span className="text-[16px] font-black tracking-[0.25em] text-white uppercase whitespace-nowrap ml-1">
                     GreenTrace
                   </span>
                 </div>
